@@ -45,8 +45,7 @@ total_bsmt_sf = st.number_input(
 if st.button("Calculate Estimated Price"):
     # Preprocessed sample ki copy lein
     sample = sample_row.copy()
-
-    st.write(sample.columns.tolist())
+    house_age = 2026 - year_built
 
     # User values update karein
     if "GrLivArea" in sample.columns:
@@ -55,8 +54,8 @@ if st.button("Calculate Estimated Price"):
         sample["BedroomAbvGr"] = bedrooms
     if "OverallQual" in sample.columns:
         sample["OverallQual"] = overall_qual
-    if "YearBuilt" in sample.columns:
-        sample["YearBuilt"] = year_built
+    if "HouseAge" in sample.columns:
+        sample["HouseAge"] = house_age
     if "TotalBsmtSF" in sample.columns:
         sample["TotalBsmtSF"] = total_bsmt_sf
 
