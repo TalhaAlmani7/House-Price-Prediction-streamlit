@@ -46,6 +46,8 @@ if st.button("Calculate Estimated Price"):
     # Preprocessed sample ki copy lein
     sample = sample_row.copy()
 
+    st.write(sample.columns.tolist())
+
     # User values update karein
     if "GrLivArea" in sample.columns:
         sample["GrLivArea"] = area
