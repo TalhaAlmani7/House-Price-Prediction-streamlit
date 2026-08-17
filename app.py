@@ -35,7 +35,12 @@ area = st.slider(
 bedrooms = st.selectbox(
     "Bedrooms Above Ground", options=[1, 2, 3, 4, 5], index=2
 )
-
+overall_qual = st.slider("Overall Quality (1-10)",
+                         min_value=1, max_value=10, value=5, step=1)
+year_built = st.slider("Year built", min_value=1800,
+                       max_value=2026, value=2000, step=1)
+total_bsmt_sf = st.number_input(
+    "Total Basement Sq Ft", min_value=0, max_value=3000, value=800)
 # 4. Predict
 if st.button("Calculate Estimated Price"):
     # Preprocessed sample ki copy lein
@@ -46,6 +51,12 @@ if st.button("Calculate Estimated Price"):
         sample["GrLivArea"] = area
     if "BedroomAbvGr" in sample.columns:
         sample["BedroomAbvGr"] = bedrooms
+    if "OverallQual" in sample.columns:
+        sample["OverallQual"] = overall_qual
+    if "YearBuilt" in sample.columns:
+        sample["YearBuilt"] = year_built
+    if "TotalBsmtSF" in sample.columns:
+        sample["TotalBsmtSF"] = total_bsmt_sf
 
     # Prediction
     pred_log = model.predict(sample)
