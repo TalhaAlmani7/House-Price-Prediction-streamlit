@@ -11,9 +11,9 @@ st.write("Enter house details below to estimate the sale price.")
 # 2. Load Model and Preprocessed Sample Row
 @st.cache_resource
 def load_all():
-    model = joblib.load("notebook/house_price_model.pkl")
+    model = joblib.load("house_price_model.pkl")
     # Notebook se save ki hui preprocessed sample row load karein
-    sample_row = joblib.load("notebook/sample_row.pkl")
+    sample_row = joblib.load("sample_row.pkl")
     return model, sample_row
 
 
