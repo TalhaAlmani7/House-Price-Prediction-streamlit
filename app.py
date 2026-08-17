@@ -3,10 +3,10 @@ import pandas as pd
 import numpy as np
 import joblib
 
-# 1. Load trained model and sample baseline row
-
+# 1. Load trained XGBoost model and sample baseline row
 model = joblib.load('house_price_model.pkl')
 sample_row = joblib.load('sample_row.pkl')
+
 st.title("🏡 House Price Prediction App")
 st.write("Enter house details below to estimate the sale price.")
 
@@ -26,13 +26,13 @@ total_bsmt_sf = st.number_input(
 
 # 3. Prediction execution block
 if st.button("Calculate Estimated Price"):
-    # Copy baseline sample
+    # Copy baseline sample row
     sample = sample_row.copy()
 
-    # Calculate house age
+    # Calculate calculated house age
     house_age = 2026 - year_built
 
-    # Update input values dynamically across possible matching columns
+    # Update input values dynamically across matching columns
     for col in sample.columns:
         if col in ["GrLivArea", "Gr_Liv_Area"]:
             sample[col] = area
@@ -45,11 +45,17 @@ if st.button("Calculate Estimated Price"):
         elif col in ["TotalBsmtSF", "Total_Bsmt_SF"]:
             sample[col] = total_bsmt_sf
 
-    # Force Overall Quality to heavily impact features if present
-    if "OverallQual" in sample.columns:
-        sample["OverallQual"] = float(overall_qual)
+    # Scale area-dependent baseline features to prevent XGBoost regression to mean
+    area_ratio = area / 1500.0
+    quality_ratio = overall_qual / 5.0
 
-    # Make prediction and reverse log transformation
+    for col in sample.columns:
+        if "1stFlrSF" in col or "2ndFlrSF" in col or "SF" in col:
+            sample[col] = sample[col] * area_ratio
+        if "Ex" in col or "Gd" in col:
+            sample[col] = sample[col] * quality_ratio
+
+    # Predict target value and convert log scale back to actual price
     pred_log = model.predict(sample)
     pred_price = np.expm1(pred_log)[0]
 
